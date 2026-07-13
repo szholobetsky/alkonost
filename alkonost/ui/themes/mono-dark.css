@@ -1,0 +1,10 @@
+/* Monochrome Dark — pure black & white */
+:root {
+  --bg:         #0a0a0a;
+  --panel:      #1a1a1a;
+  --text:       #eeeeee;
+  --text-muted: #888888;
+  --border:     #333333;
+  --accent:     #cccccc;
+  --urgent:     #e5484d;
+}

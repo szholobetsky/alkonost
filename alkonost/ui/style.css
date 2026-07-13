@@ -1,0 +1,484 @@
+/* Theme color variables (--bg, --panel, --text, --text-muted, --border,
+   --accent, --urgent) come from ui/themes/*.css, loaded via the
+   #theme-link stylesheet and switched at runtime by app.js — same
+   mechanism as vyrii's ui/style.css. This block is only the fallback in
+   case that stylesheet fails to load. */
+:root {
+  --bg: #1B2B34;
+  --panel: #1e3040;
+  --text: #CDD3DE;
+  --text-muted: #65737E;
+  --border: #2d4454;
+  --accent: #5FB3B3;
+  --urgent: #e0645f;
+  --radius: 6px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+#topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  padding: 0.6rem 1rem;
+  background: var(--panel);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.brand { font-weight: 600; font-size: 1.1rem; }
+.spacer { flex: 1; min-width: 0; }
+
+select, button {
+  font: inherit;
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+}
+
+button { cursor: pointer; }
+button:disabled { opacity: 0.5; cursor: default; }
+button#save-btn:not(:disabled) { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.dirty-indicator { color: var(--text-muted); font-size: 0.85rem; }
+.dirty-indicator.status-ok { color: var(--accent); }
+.dirty-indicator.status-error { color: var(--urgent); font-weight: 600; }
+.hidden { display: none !important; }
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.filter-btn {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.filter-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+main { padding: 1rem; max-width: 1400px; margin: 0 auto; }
+
+.empty-state { padding: 2rem; text-align: center; color: var(--text-muted); }
+
+.board {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.lane {
+  min-width: 260px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* "Fit to screen" — shrink every lane to an equal share of the available
+   width instead of scrolling. .board keeps overflow-x:auto as a safety
+   net: if there are so many lanes that even min-width can't be honored,
+   it falls back to scrolling rather than squeezing cards unreadably. */
+.board.fit-width .lane {
+  flex: 1 1 0;
+  min-width: 140px;
+}
+
+.lane h3 {
+  margin: 0.2rem 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.lane-body { min-height: 2.5rem; }
+
+.drop-marker {
+  cursor: default;
+  user-select: none;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.5rem 0.6rem;
+  margin-bottom: 0.5rem;
+  cursor: grab;
+}
+
+.card.dragging { opacity: 0.4; }
+.card .card-id { font-size: 0.72rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.4rem; }
+.drag-handle {
+  cursor: grab;
+  color: var(--text-muted);
+  user-select: none;
+  font-size: 0.9rem;
+  line-height: 1;
+  padding: 0 0.15rem;
+}
+.drag-handle:active { cursor: grabbing; }
+.card .card-title { font-size: 0.88rem; margin: 0.15rem 0; }
+.title-input { width: 100%; border: none; background: transparent; font-size: 0.88rem; color: var(--text); }
+.title-input:focus { border-bottom: 1px solid var(--border); background: var(--bg); }
+
+.spec-link {
+  font-size: 0.72rem;
+  color: var(--accent);
+  cursor: pointer;
+  text-decoration: underline;
+  margin-left: auto;
+}
+
+.urgent-marker { border-left: 4px solid var(--urgent); }
+.urgent-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #fff;
+  background: var(--urgent);
+  padding: 0.05rem 0.35rem;
+  border-radius: 3px;
+  margin-left: 0.3rem;
+  vertical-align: middle;
+}
+
+.table-scroll { overflow-x: auto; border-radius: var(--radius); }
+
+.lane-select {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.3rem;
+  margin-left: auto;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1rem 0 0.5rem;
+}
+.section-header h2 { font-size: 1rem; margin: 0; flex: 1; }
+
+.dashboard-header h2 { flex: 0 0 auto; }
+.dashboard-flow-input { flex: 1; min-width: 0; font-size: 0.85rem; }
+
+.fit-width-toggle {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+}
+.fit-width-toggle input { cursor: pointer; }
+
+table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+th, td { text-align: left; padding: 0.4rem 0.6rem; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+th { color: var(--text-muted); font-weight: 600; }
+tr.dirty-row { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+tr.active-row { background: color-mix(in srgb, var(--accent) 4%, transparent); }
+
+.tag-input { width: 100%; border: 1px solid transparent; background: transparent; color: var(--text); font: inherit; font-size: 0.8rem; }
+.tag-input:focus { border-color: var(--border); background: var(--bg); }
+
+#colors-editor { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.color-row { display: flex; align-items: center; gap: 0.3rem; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.3rem 0.5rem; }
+.color-row-at { color: var(--text-muted); font-weight: 600; margin-right: -0.2rem; }
+.color-row input[type="text"] { width: 90px; border: 1px solid var(--border); border-radius: 4px; background: var(--bg); color: var(--text); }
+.color-row input[type="color"] { width: 28px; height: 28px; padding: 0; border: none; background: none; }
+.color-row .remove-color { color: var(--urgent); cursor: pointer; border: none; background: none; font-size: 1rem; }
+
+.side-panel {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 620px;
+  max-width: 92vw;
+  background: var(--panel);
+  border-left: 1px solid var(--border);
+  box-shadow: -4px 0 12px rgba(0,0,0,0.15);
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+}
+.side-panel-header {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+}
+.side-panel-header span { flex: 1; font-size: 0.85rem; color: var(--text-muted); }
+.side-panel-header button { border: none; background: none; font-size: 1.2rem; cursor: pointer; color: var(--text); }
+.side-panel a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+
+.icon-btn { font-size: 1rem !important; }
+
+.side-panel-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0.6rem 0.8rem;
+  overflow: auto;
+}
+#side-panel-textarea {
+  flex: 1 1 45%;
+  min-height: 140px;
+  resize: vertical;
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem;
+}
+.side-panel-editor-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+.side-panel-preview-label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+.side-panel-editor #side-panel-preview {
+  flex: 1 1 45%;
+  min-height: 100px;
+  padding: 0.6rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: auto;
+  font-size: 0.82rem;
+}
+
+/* markdown / LaTeX / mermaid rendering inside the side panel — mirrors
+   vyrii's chat `.bubble` markdown styling, adapted to alkonost's own
+   (smaller) theme variable set */
+#side-panel-content {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  overflow: auto;
+  font-size: 0.86rem;
+  line-height: 1.6;
+  color: var(--text);
+  flex: 1;
+}
+.md-content h1, .md-content h2, .md-content h3 { margin: 0.8rem 0 0.4rem; line-height: 1.3; }
+.md-content h1:first-child, .md-content h2:first-child, .md-content h3:first-child { margin-top: 0; }
+.md-content p { margin: 0 0 0.6rem; }
+.md-content p:last-child { margin-bottom: 0; }
+.md-content ul, .md-content ol { padding-left: 1.2rem; margin: 0.3rem 0 0.6rem; }
+.md-content strong { font-weight: 600; }
+.md-content code {
+  font-family: ui-monospace, "Cascadia Code", Consolas, monospace;
+  font-size: 0.8rem;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.05rem 0.3rem;
+}
+.md-content pre {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.7rem;
+  margin: 0.5rem 0;
+  overflow-x: auto;
+}
+.md-content pre code { background: none; border: none; padding: 0; }
+.source-link {
+  display: inline-block;
+  font-family: ui-monospace, Consolas, monospace;
+  font-size: 0.78rem;
+}
+
+.md-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin: 0.5rem 0;
+}
+.md-table th, .md-table td {
+  padding: 0.3rem 0.6rem;
+  border: 1px solid var(--border);
+}
+.md-table th { font-weight: 600; background: var(--bg); }
+
+.katex-wrap { position: relative; }
+.katex-display-wrap { display: block; margin: 0.5rem 0; overflow-x: auto; }
+.katex-copy, .mermaid-copy {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 2;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.72rem;
+  padding: 0.05rem 0.3rem;
+  opacity: 0;
+  transition: opacity .2s;
+}
+.katex-wrap:hover .katex-copy, .mermaid-wrap:hover .mermaid-copy { opacity: 1; }
+
+.mermaid-wrap { position: relative; margin: 0.5rem 0; }
+.mermaid-wrap pre.mermaid { background: #fff; border-radius: var(--radius); padding: 0.5rem; }
+
+/* touch devices have no hover state — keep copy buttons reachable */
+@media (hover: none) {
+  .katex-copy, .mermaid-copy { opacity: 1; }
+}
+
+.add-subtask-btn {
+  font-size: 0.72rem;
+  padding: 0.1rem 0.35rem;
+}
+
+.add-spec-btn {
+  font-size: 0.72rem;
+  color: var(--accent);
+  background: none;
+  border: 1px dashed var(--accent);
+  border-radius: 4px;
+  padding: 0.05rem 0.35rem;
+  cursor: pointer;
+}
+
+/* ── Add Task / Add Subtask modal ─────────────────────────────────────── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+}
+
+.modal-box {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.2rem;
+  width: 460px;
+  max-width: 92vw;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.modal-box h3 { margin: 0 0 0.8rem; font-size: 1rem; }
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.modal-field input {
+  font: inherit;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.modal-tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.6rem;
+}
+.modal-tag-row .modal-field { flex: 1 1 45%; min-width: 100px; }
+
+.modal-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+}
+
+.modal-error {
+  color: var(--urgent);
+  font-size: 0.8rem;
+  margin: -0.2rem 0 0.6rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+.modal-actions button:first-child { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+/* ── mobile / narrow-viewport layout ──────────────────────────────────── */
+@media (max-width: 720px) {
+  main { padding: 0.6rem; }
+
+  #topbar { padding: 0.5rem 0.6rem; gap: 0.4rem 0.5rem; }
+  #topbar select, #topbar button { flex: 1 1 auto; min-width: 0; }
+  .brand { flex: 0 0 100%; }
+  .spacer { flex-basis: 100%; height: 0; }
+
+  select, button {
+    min-height: 2.3rem;
+    font-size: 0.9rem;
+  }
+
+  .board { flex-direction: column; overflow-x: visible; }
+  .lane { min-width: 0; width: 100%; }
+
+  table, thead, tbody, th, td, tr { display: block; }
+  #backlog-table thead { display: none; }
+  #backlog-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem 0.6rem;
+  }
+  #backlog-table td {
+    border-bottom: none;
+    padding: 0.25rem 0;
+  }
+  #backlog-table td:first-child { font-size: 0.75rem; color: var(--text-muted); padding-top: 0; }
+
+  .side-panel { width: 100vw; max-width: 100vw; }
+
+  .color-row { flex: 1 1 100%; }
+}

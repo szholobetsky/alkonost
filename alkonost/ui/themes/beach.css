@@ -1,0 +1,10 @@
+/* Beach — turquoise sea, aquamarine shallows */
+:root {
+  --bg:         #F0FDFC;
+  --panel:      #CCFBF1;
+  --text:       #042F2E;
+  --text-muted: #0F766E;
+  --border:     #99F6E4;
+  --accent:     #0D9488;
+  --urgent:     #e11d48;
+}

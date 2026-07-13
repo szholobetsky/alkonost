@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en" data-theme="ocean">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alkonost</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" id="theme-link" href="themes/ocean.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
+</head>
+<body>
+<header id="topbar">
+  <span class="brand">Alkonost</span>
+
+  <select id="project-select">
+    <option value="">Select project…</option>
+  </select>
+
+  <select id="plan-select" disabled>
+    <option value="">Select plan…</option>
+  </select>
+
+  <button id="browse-planmd-btn" disabled title="Browse raw planMD tree for this plan">Browse planMD</button>
+
+  <span class="spacer"></span>
+
+  <select id="theme-select" onchange="setTheme(this.value)" title="Theme"></select>
+
+  <span id="dirty-indicator" class="dirty-indicator hidden"></span>
+  <button id="save-btn" disabled>Save Changes</button>
+</header>
+
+<div id="filter-bar" class="filter-bar"></div>
+
+<main id="main">
+  <div id="empty-state" class="empty-state hidden">
+    <p>No tasks.md yet for this plan — run <code>deepagent_task</code> and refresh.</p>
+  </div>
+
+  <div class="section-header dashboard-header">
+    <h2>Dashboard</h2>
+    <input type="text" id="dashboard-flow-input" class="dashboard-flow-input"
+           placeholder="+selected, +active, +paused, +testing, +done, +releasing"
+           title="Comma-separated lane statuses to show on the dashboard board below. Tasks in other statuses (e.g. +backlog, +complete, +canceled, +closed) are hidden here and stay visible only in the Backlog table.">
+    <label class="fit-width-toggle" title="Shrink columns so every lane fits the screen width, instead of scrolling left/right">
+      <input type="checkbox" id="fit-width-toggle"> Fit to screen
+    </label>
+  </div>
+  <section id="board" class="board"></section>
+
+  <section id="backlog-section">
+    <div class="section-header">
+      <h2>Backlog</h2>
+      <button id="add-task-btn">+ Add Task</button>
+    </div>
+    <div class="table-scroll">
+      <table id="backlog-table">
+        <thead>
+          <tr><th>ID</th><th>Title</th><th>Tags</th><th></th><th></th></tr>
+        </thead>
+        <tbody id="backlog-body"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="colors-section">
+    <div class="section-header">
+      <h2>Module Colors</h2>
+      <button id="colors-add-btn">+ Add module</button>
+      <button id="colors-save-btn">Save Colors</button>
+    </div>
+    <div id="colors-editor"></div>
+  </section>
+</main>
+
+<aside id="side-panel" class="side-panel hidden">
+  <div class="side-panel-header">
+    <span id="side-panel-breadcrumb"></span>
+    <button id="side-panel-edit-btn" class="icon-btn hidden" title="Edit raw markdown">&#9998;</button>
+    <button id="side-panel-close">&times;</button>
+  </div>
+  <div id="side-panel-content" class="md-content"></div>
+  <div id="side-panel-editor" class="side-panel-editor hidden">
+    <textarea id="side-panel-textarea" spellcheck="false"></textarea>
+    <div class="side-panel-editor-actions">
+      <button id="side-panel-save-btn">Save</button>
+      <button id="side-panel-cancel-btn">Cancel</button>
+      <span id="side-panel-edit-status" class="dirty-indicator"></span>
+    </div>
+    <div class="side-panel-preview-label">Preview</div>
+    <div id="side-panel-preview" class="md-content"></div>
+  </div>
+</aside>
+
+<div id="task-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h3 id="task-modal-heading">Add Task</h3>
+
+    <label class="modal-field">
+      <span>ID</span>
+      <input type="text" id="task-modal-id">
+    </label>
+
+    <label class="modal-field">
+      <span>Task</span>
+      <input type="text" id="task-modal-text" placeholder="Task description">
+    </label>
+
+    <div class="modal-tag-row">
+      <label class="modal-field">
+        <span>#tag</span>
+        <input type="text" id="task-modal-hash" list="task-modal-hash-list">
+        <datalist id="task-modal-hash-list"></datalist>
+      </label>
+      <label class="modal-field">
+        <span>@module</span>
+        <input type="text" id="task-modal-at" list="task-modal-at-list">
+        <datalist id="task-modal-at-list"></datalist>
+      </label>
+      <label class="modal-field">
+        <span>+status</span>
+        <input type="text" id="task-modal-plus" list="task-modal-plus-list">
+        <datalist id="task-modal-plus-list"></datalist>
+      </label>
+      <label class="modal-field">
+        <span>%user</span>
+        <input type="text" id="task-modal-user" list="task-modal-user-list">
+        <datalist id="task-modal-user-list"></datalist>
+      </label>
+    </div>
+
+    <label class="modal-checkbox">
+      <input type="checkbox" id="task-modal-urgent"> +urgent
+    </label>
+
+    <p id="task-modal-error" class="modal-error hidden"></p>
+
+    <div class="modal-actions">
+      <button id="task-modal-ok">OK</button>
+      <button id="task-modal-cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: false, theme: 'default' });</script>
+<script src="app.js"></script>
+</body>
+</html>

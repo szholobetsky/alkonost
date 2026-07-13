@@ -1,0 +1,10 @@
+/* Soft — warm cream */
+:root {
+  --bg:         #faf7f2;
+  --panel:      #f0ebe3;
+  --text:       #2d2416;
+  --text-muted: #8b7355;
+  --border:     #ddd5c8;
+  --accent:     #7c3aed;
+  --urgent:     #dc2626;
+}

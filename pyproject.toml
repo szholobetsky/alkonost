@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alkonost"
+version = "0.1.1"
+description = "Standalone task-board viewer/editor for tasks.md/planMD/spec artifacts produced by 1bcoder's deepagent_md/deepagent_spec/deepagent_task flows. No LLM calls."
+requires-python = ">=3.10"
+readme = {file = "README.md", content-type = "text/markdown"}
+dependencies = [
+    "flask>=3.0",
+    "waitress>=2.1",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[project.urls]
+Homepage   = "https://github.com/szholobetsky/alkonost"
+Repository = "https://github.com/szholobetsky/alkonost"
+
+[project.scripts]
+alkonost = "alkonost.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools.package-data]
+"alkonost" = ["ui/**/*"]

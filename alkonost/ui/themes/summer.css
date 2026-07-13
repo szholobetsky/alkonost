@@ -1,0 +1,10 @@
+/* Summer — warm Mediterranean sun */
+:root {
+  --bg:         #FFFCF0;
+  --panel:      #FFF8E1;
+  --text:       #1A120B;
+  --text-muted: #92400E;
+  --border:     #FFCC80;
+  --accent:     #F97316;
+  --urgent:     #b91c1c;
+}

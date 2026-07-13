@@ -1,0 +1,10 @@
+/* Ocean — Oceanic Next palette */
+:root {
+  --bg:         #1B2B34;
+  --panel:      #1e3040;
+  --text:       #CDD3DE;
+  --text-muted: #65737E;
+  --border:     #2d4454;
+  --accent:     #5FB3B3;
+  --urgent:     #e0645f;
+}
