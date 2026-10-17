@@ -41,3 +41,11 @@ def test_list_plans_sparse_vs_full():
     plans_b = {p["name"]: p for p in discovery.list_plans(PROJ_B)}
     assert plans_b["plan2"]["has_spec"] is False
     assert plans_b["plan2"]["has_tasks"] is False
+
+
+def test_discover_projects_skips_temp_and_appdata(tmp_path):
+    # leftovers of tests (tmpXXXX/.1bcoder) under Temp / AppData are not projects
+    for rel in ("real/.1bcoder", "AppData/Local/Temp/tmpabc/.1bcoder", "Temp/tmpdef/.1bcoder"):
+        (tmp_path / rel).mkdir(parents=True)
+    roots = {p["name"] for p in discovery.discover_projects(str(tmp_path), max_depth=6).values()}
+    assert roots == {"real"}

@@ -4,13 +4,21 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "alkonost"
-version = "0.1.1"
+version = "0.1.2"
 description = "Standalone task-board viewer/editor for tasks.md/planMD/spec artifacts produced by 1bcoder's deepagent_md/deepagent_spec/deepagent_task flows. No LLM calls."
 requires-python = ">=3.10"
 readme = {file = "README.md", content-type = "text/markdown"}
 dependencies = [
     "flask>=3.0",
     "waitress>=2.1",
+    # Only for reading/writing radogast's own .radogast/task.yaml (a real,
+    # simple YAML file radogast itself writes via yaml.dump) so the
+    # Radogast page can edit key_terms/out_of_scope as a genuine round
+    # trip. Deliberately NOT used for .1bcoder/config.yml or
+    # _deepagent_meta.yaml — see settings.py's and runner.py's own
+    # bump_meta_maxdepth docstrings for why those stay hand-rolled/
+    # surgical instead.
+    "pyyaml>=6.0",
 ]
 
 [project.optional-dependencies]

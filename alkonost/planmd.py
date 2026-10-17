@@ -65,6 +65,31 @@ def is_leaf(node_id: str, all_ids: set) -> bool:
     return not child_ids(node_id, all_ids)
 
 
+def full_text(plan_dir: str) -> str:
+    """Concatenates index.md's full content with every item_<id>.md's own
+    full content, in dotted-id tree order — the whole plan as one
+    document, not just index.md's one-line root task. Used by the
+    Radogast page's "Derive" action: a term that only shows up in a leaf
+    several levels deep (e.g. "Kotlin" mentioned in item_1.2.1.md but not
+    anywhere in index.md's own overview sentence) is exactly as real a
+    project term as anything in the root task, and index.md-only
+    derivation was silently missing it."""
+    parts = []
+    index_path = os.path.join(plan_dir, "index.md")
+    if os.path.isfile(index_path):
+        try:
+            with open(index_path, encoding="utf-8") as f:
+                parts.append(f.read())
+        except OSError:
+            pass
+    all_ids = collect_node_ids(plan_dir)
+    for node_id in sorted(all_ids, key=lambda x: tuple(int(p) for p in x.split("."))):
+        content = read_item(plan_dir, node_id)
+        if content:
+            parts.append(content)
+    return "\n\n".join(parts)
+
+
 def build_tree(plan_dir: str) -> list:
     """[{"id","title","children":[...nested...]}, ...] — top-level nodes
     (single-segment ids), each recursively populated with its children.

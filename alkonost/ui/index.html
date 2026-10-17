@@ -9,54 +9,101 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.css">
 </head>
 <body>
+<div class="app">
+
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <span class="sb-logo"><span class="sb-emoji" aria-hidden="true">🐦‍⬛</span><span class="sb-name">ALKONOST</span></span>
+      <span class="sb-tagline" data-i18n="tagline">deepagent_* cockpit</span>
+    </div>
+    <nav class="sb-nav">
+      <button class="nav-item" data-view="init">
+        <span class="ni-icon">🚀</span><span class="ni-label" data-i18n="nav_init">Init</span>
+      </button>
+      <button class="nav-item" data-view="plan">
+        <span class="ni-icon">🌳</span><span class="ni-label" data-i18n="nav_plan">Plan</span>
+      </button>
+      <button class="nav-item" data-view="radogast">
+        <span class="ni-icon">🎯</span><span class="ni-label" data-i18n="nav_radogast">Radogast</span>
+      </button>
+      <button class="nav-item" data-view="axis">
+        <span class="ni-icon">🧭</span><span class="ni-label" data-i18n="nav_axis">Axis</span>
+      </button>
+      <button class="nav-item" data-view="spec">
+        <span class="ni-icon">📐</span><span class="ni-label" data-i18n="nav_spec">Spec</span>
+      </button>
+      <button class="nav-item active" data-view="tasks">
+        <span class="ni-icon">✅</span><span class="ni-label" data-i18n="nav_tasks">Tasks</span>
+      </button>
+      <button class="nav-item" data-view="glossary">
+        <span class="ni-icon">📖</span><span class="ni-label" data-i18n="nav_glossary">Glossary</span>
+      </button>
+      <button class="nav-item" data-view="settings">
+        <span class="ni-icon">⚙️</span><span class="ni-label" data-i18n="nav_settings">Settings</span>
+      </button>
+      <button class="nav-item" data-view="files">
+        <span class="ni-icon">🗂️</span><span class="ni-label" data-i18n="tab_files">Files</span>
+      </button>
+    </nav>
+  </aside>
+
+  <div class="app-main">
+
 <header id="topbar">
-  <span class="brand">Alkonost</span>
+  <button id="refresh-btn" data-i18n="refresh_btn" data-i18n-title="refresh_title">⟳ Refresh</button>
 
   <select id="project-select">
-    <option value="">Select project…</option>
+    <option value="" data-i18n="select_project_opt">Select project…</option>
   </select>
+  <button id="new-project-btn" type="button" data-i18n-title="np_title">＋</button>
 
   <select id="plan-select" disabled>
-    <option value="">Select plan…</option>
+    <option value="" data-i18n="select_plan_opt">Select plan…</option>
   </select>
 
-  <button id="browse-planmd-btn" disabled title="Browse raw planMD tree for this plan">Browse planMD</button>
+  <button id="browse-planmd-btn" disabled data-i18n="browse_planmd" data-i18n-title="browse_planmd_title">Browse planMD</button>
 
   <span class="spacer"></span>
 
-  <select id="theme-select" onchange="setTheme(this.value)" title="Theme"></select>
+  <select id="theme-select" onchange="setTheme(this.value)" data-i18n-title="theme_title"></select>
+  <select id="lang-select" data-i18n-title="lang_title"></select>
 
   <span id="dirty-indicator" class="dirty-indicator hidden"></span>
-  <button id="save-btn" disabled>Save Changes</button>
+  <button id="save-btn" disabled data-i18n="save_changes">Save Changes</button>
 </header>
+
+<div id="no-projects-banner" class="no-projects-banner hidden">
+  <span id="no-projects-text"></span>
+  <button id="no-projects-btn" type="button" data-i18n="np_make">＋ Make a folder a project</button>
+</div>
 
 <div id="filter-bar" class="filter-bar"></div>
 
-<main id="main">
+<main id="main" class="view-panel">
   <div id="empty-state" class="empty-state hidden">
-    <p>No tasks.md yet for this plan — run <code>deepagent_task</code> and refresh.</p>
+    <p data-i18n-html="empty_state">No tasks.md yet for this plan — run <code>deepagent_task</code> and refresh.</p>
   </div>
 
   <div class="section-header dashboard-header">
-    <h2>Dashboard</h2>
+    <h2 data-i18n="dashboard">Dashboard</h2>
     <input type="text" id="dashboard-flow-input" class="dashboard-flow-input"
            placeholder="+selected, +active, +paused, +testing, +done, +releasing"
-           title="Comma-separated lane statuses to show on the dashboard board below. Tasks in other statuses (e.g. +backlog, +complete, +canceled, +closed) are hidden here and stay visible only in the Backlog table.">
-    <label class="fit-width-toggle" title="Shrink columns so every lane fits the screen width, instead of scrolling left/right">
-      <input type="checkbox" id="fit-width-toggle"> Fit to screen
+           data-i18n-title="dashboard_flow_title">
+    <label class="fit-width-toggle" data-i18n-title="fit_title">
+      <input type="checkbox" id="fit-width-toggle"> <span data-i18n="fit_label">Fit to screen</span>
     </label>
   </div>
   <section id="board" class="board"></section>
 
   <section id="backlog-section">
     <div class="section-header">
-      <h2>Backlog</h2>
-      <button id="add-task-btn">+ Add Task</button>
+      <h2 data-i18n="backlog">Backlog</h2>
+      <button id="add-task-btn" data-i18n="add_task_btn">+ Add Task</button>
     </div>
     <div class="table-scroll">
       <table id="backlog-table">
         <thead>
-          <tr><th>ID</th><th>Title</th><th>Tags</th><th></th><th></th></tr>
+          <tr><th data-i18n="th_id">ID</th><th data-i18n="th_title">Title</th><th data-i18n="th_tags">Tags</th><th></th><th></th></tr>
         </thead>
         <tbody id="backlog-body"></tbody>
       </table>
@@ -65,36 +112,446 @@
 
   <section id="colors-section">
     <div class="section-header">
-      <h2>Module Colors</h2>
-      <button id="colors-add-btn">+ Add module</button>
-      <button id="colors-save-btn">Save Colors</button>
+      <h2 data-i18n="module_colors">Module Colors</h2>
+      <button id="colors-add-btn" data-i18n="add_module">+ Add module</button>
+      <button id="colors-save-btn" data-i18n="save_colors">Save Colors</button>
     </div>
     <div id="colors-editor"></div>
   </section>
+
+  <section id="tag-reference-section">
+    <div class="section-header"><h2 data-i18n="tag_reference">Tag reference</h2></div>
+    <p class="hint" data-i18n-html="tag_ref_intro">Every task row is <code>[ ] &lt;plan&gt;-&lt;id&gt;. &lt;title&gt; #tag @module +flag %user due:YYYY-MM-DD _done:YYYY-MM-DD</code> — any number of these, in any order, after the title.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th data-i18n="th_prefix">Prefix</th><th data-i18n="th_meaning">Meaning</th><th data-i18n="th_example">Example</th></tr></thead>
+        <tbody>
+          <tr><td><code>#tag</code></td><td data-i18n="tag_hash">Classification — any number of these</td><td><code>#backend #api</code></td></tr>
+          <tr><td><code>@module</code></td><td data-i18n="tag_at">Single grouping tag — drives card color via the Module Colors legend above</td><td><code>@backend</code></td></tr>
+          <tr><td><code>+flag</code></td><td data-i18n="tag_plus">Status/priority — any number of these, open-ended</td><td><code>+active +urgent</code></td></tr>
+          <tr><td><code>%user</code></td><td data-i18n="tag_user">Assignee</td><td><code>%user1</code></td></tr>
+          <tr><td><code>due:</code></td><td data-i18n="tag_due">Deadline</td><td><code>due:2026-09-20</code></td></tr>
+          <tr><td><code>_done:</code></td><td data-i18n-html="tag_done">Completion date — a non-empty value marks the row <code>[x]</code></td><td><code>_done:2026-09-15</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint" data-i18n-html="tag_ref_note"><code>%</code> was chosen for assignee (over <code>!</code>/<code>$</code>/<code>&amp;</code>/<code>=</code>) specifically to avoid colliding with markdown image syntax (<code>![</code>) and with KaTeX math delimiters (<code>$...$</code>), both already in use elsewhere in this codebase.</p>
+  </section>
+</main>
+
+<main id="init-view" class="view-panel hidden">
+  <section id="plan-generate-section">
+    <div class="section-header"><h2 data-i18n="gen_new_plan">Generate a new plan</h2></div>
+    <div class="plan-form">
+      <label><span data-i18n="flow">Flow</span>
+        <span class="flow-select-row">
+          <select id="plan-flow-select">
+            <option value="tree_md" data-i18n="flow_tree_md">deepagent_tree_md — structured backlog, full-paragraph detail per item</option>
+            <option value="tree" data-i18n="flow_tree">deepagent_tree — structured backlog, terse/compact items</option>
+            <option value="md" data-i18n="flow_md">deepagent_md — prose document, sections free to revisit themes</option>
+          </select>
+          <button type="button" id="plan-flow-help-btn" class="help-btn" data-i18n="help_btn" data-i18n-title="flow_help_title">❓ Help</button>
+        </span>
+      </label>
+      <p class="hint" data-i18n-html="flow_hint">Pick the genre, not just the verbosity. <code>deepagent_md</code> writes <strong>prose to read</strong> — an essay free to revisit a theme, where a section doesn't have to equal the sum of its subsections. <code>deepagent_tree</code>/<code>deepagent_tree_md</code> write a <strong>structure to build from</strong> — every branch owns a disjoint slice, siblings stay the same size/kind of thing, nothing restates an ancestor or reaches below its own level; the two differ only in how much text lands under each heading (one disciplined sentence vs. a full paragraph), not in that discipline. Pick prose for something meant to be read end-to-end; pick a tree when the output will be cut into tickets/specs afterward. See <code>concepts/DEEPAGENT_TREE.md</code> for the full contract and measured failure modes.</p>
+      <label class="plan-task-label"><span data-i18n="task">Task</span>
+        <textarea id="plan-task-input" rows="3" data-i18n-ph="plan_task_ph" placeholder="Describe the task to expand into a plan…"></textarea>
+      </label>
+      <div class="plan-form-row">
+        <label><span data-i18n="mode">Mode</span>
+          <select id="plan-mode-select">
+            <option value="full" data-i18n="mode_full">Full (one-shot, set it running and walk away)</option>
+            <option value="layer1" data-i18n="mode_layer1">Layer-by-layer (depth 1 first, edit, then "generate next layer" on the Plan tab)</option>
+          </select>
+        </label>
+        <label><span data-i18n="max_depth_full">Max depth (full mode only)</span>
+          <input type="number" id="plan-maxdepth-input" value="3" min="1" max="8">
+        </label>
+      </div>
+      <label><span data-i18n="extra_flags">Extra flags</span> <span class="hint" data-i18n-html="extra_flags_hint">(anything not covered above — passed through as-is, e.g. <code>--web 3 --profile phones</code>)</span>
+        <input type="text" id="plan-extra-input" placeholder="--web 3">
+      </label>
+      <button id="plan-generate-btn" data-i18n="generate">Generate</button>
+    </div>
+  </section>
+
+  <section id="init-log-section" class="hidden">
+    <div class="section-header"><h2><span data-i18n="log">Log</span> <span id="init-log-status" class="log-status"></span></h2><button type="button" id="init-stop-btn" class="stop-btn" disabled data-i18n="stop" data-i18n-title="stop_title">🛑 Stop</button></div>
+    <pre id="init-log" class="plan-log"></pre>
+  </section>
+
+  <p class="hint" data-i18n-html="init_after">Once a plan exists, switch to the <strong>Plan</strong> tab (top bar plan-select) to read it, edit items, or regenerate individual elements.</p>
+</main>
+
+<main id="plan-view" class="view-panel hidden">
+  <section id="plan-engine-picker" class="hidden">
+    <div class="section-header"><h2 data-i18n="engine_setup_t">This plan needs a one-time setup</h2></div>
+    <p class="hint" data-i18n-html="engine_setup_hint">Alkonost can't tell which <code>deepagent_*</code> engine generated this plan (they all write the same file shapes) — pick it once so <code>redo</code>/"generate next layer" know which flow to call.</p>
+    <label><span data-i18n="engine">Engine</span>
+      <select id="plan-engine-select">
+        <option value="tree_md">deepagent_tree_md</option>
+        <option value="tree">deepagent_tree</option>
+        <option value="md">deepagent_md</option>
+      </select>
+    </label>
+    <button id="plan-engine-save-btn" data-i18n="save">Save</button>
+  </section>
+
+  <section id="plan-log-section" class="hidden">
+    <div class="section-header"><h2><span data-i18n="log">Log</span> <span id="plan-log-status" class="log-status"></span></h2><button type="button" id="plan-stop-btn" class="stop-btn" disabled data-i18n="stop" data-i18n-title="stop_title">🛑 Stop</button></div>
+    <pre id="plan-log" class="plan-log"></pre>
+  </section>
+
+  <section id="plan-tree-section">
+    <div class="section-header">
+      <h2 data-i18n="plan_tree">Plan tree</h2>
+      <div class="plan-continue-row">
+        <input type="text" id="plan-continue-label-input" data-i18n-ph="continue_ph" data-i18n-title="continue_title">
+        <button id="plan-continue-btn" data-i18n="continue_btn">Generate next layer</button>
+        <button id="plan-resume-btn" type="button" data-i18n="resume_btn" data-i18n-title="resume_title">▶️ Resume</button>
+        <button id="plan-new-from-source-btn" type="button" data-i18n="new_from_source_btn" data-i18n-title="new_from_source_title">🔁 Create new plan based on this</button>
+      </div>
+    </div>
+    <p class="hint" id="plan-continue-hint"></p>
+    <div id="plan-tree-container" class="plan-tree"></div>
+  </section>
+</main>
+
+<main id="radogast-view" class="view-panel hidden">
+  <section id="radogast-target-section">
+    <div class="section-header">
+      <h2 data-i18n="rg_target">Target (key terms &amp; scope)</h2>
+      <button type="button" id="radogast-derive-index-btn" data-i18n="rg_derive_index" data-i18n-title="rg_derive_index_title">↺ Derive from index.md</button>
+      <button type="button" id="radogast-derive-full-btn" data-i18n="rg_derive_full" data-i18n-title="rg_derive_full_title">↺ Derive from whole planMD</button>
+    </div>
+    <p class="hint" data-i18n="rg_hint">Radogast checks this plan's tree against a target: which key terms should eventually be covered somewhere, and which topics are out of scope (shouldn't get reinvented). Nothing here has to be right on the first try — derive a starting point, edit it, save, then analyze.</p>
+    <div class="plan-form">
+      <label><span data-i18n="rg_goal">Goal</span> <input type="text" id="radogast-goal-input" data-i18n-ph="rg_goal_ph"></label>
+      <label><span data-i18n="rg_keyterms">Key terms</span> <span class="hint" data-i18n="rg_keyterms_hint"></span>
+        <input type="text" id="radogast-keyterms-input" placeholder="kotlin, spring boot, postgres, geofencing">
+      </label>
+      <label><span data-i18n="rg_oos">Out of scope</span> <span class="hint" data-i18n="rg_oos_hint"></span>
+        <input type="text" id="radogast-oos-input" placeholder="tcp/ip, dns, custom orm">
+      </label>
+      <div class="plan-form-row">
+        <button id="radogast-save-target-btn" data-i18n="rg_save_target">Save target</button>
+        <span id="radogast-target-status" class="dirty-indicator"></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="radogast-analyze-section">
+    <div class="section-header">
+      <h2 data-i18n="rg_analyze_t">Analyze</h2>
+      <button type="button" id="radogast-help-btn" class="help-btn" data-i18n="help_btn" data-i18n-title="rg_help_title">❓ Help</button>
+    </div>
+    <div class="plan-form-row">
+      <label><span data-i18n="rg_threshold">Similarity threshold</span> <span class="hint" data-i18n="rg_threshold_hint"></span>
+        <input type="number" id="radogast-threshold-input" value="0.85" min="0" max="1" step="0.01">
+      </label>
+      <label><input type="checkbox" id="radogast-show-all-checkbox"> <span data-i18n="rg_show_all">Show all nodes (not just flagged ones)</span></label>
+      <button id="radogast-analyze-btn" data-i18n="rg_analyze_btn">🔍 Analyze</button>
+    </div>
+  </section>
+
+  <section id="radogast-log-section" class="hidden">
+    <div class="section-header"><h2><span data-i18n="log">Log</span> <span id="radogast-log-status" class="log-status"></span></h2><button type="button" id="radogast-stop-btn" class="stop-btn" disabled data-i18n="stop" data-i18n-title="stop_title">🛑 Stop</button></div>
+    <pre id="radogast-log" class="plan-log"></pre>
+  </section>
+</main>
+
+<main id="axis-view" class="view-panel hidden">
+  <section id="axis-rag-section">
+    <div class="section-header"><h2 data-i18n="ax_rag_t">RAG grounding (optional)</h2></div>
+    <p class="hint" data-i18n-html="ax_rag_hint">Indexes a research plan's own files with simargl, so the axis-plan's generation can pull in relevant chunks from it via 1bcoder's existing <code>--rag</code>/<code>--rag-store</code> flags. This is plain semantic file search, not deduplication.</p>
+    <label><span data-i18n="ax_source_plan">Source research plan</span>
+      <select id="axis-source-plan-select"></select>
+    </label>
+    <div class="plan-form-row">
+      <input type="text" id="axis-rag-name-input" placeholder="plan1_rag">
+      <button id="axis-rag-index-btn" data-i18n="ax_index_btn">Index this plan</button>
+    </div>
+    <div class="plan-form-row">
+      <label><input type="checkbox" id="axis-rag-use-checkbox"> <span data-i18n="ax_use_rag">Use RAG</span></label>
+      <select id="axis-rag-project-select"><option value="" data-i18n="ax_none_indexed">(none indexed yet)</option></select>
+      <button id="axis-rag-refresh-btn" type="button" data-i18n="ax_refresh" data-i18n-title="ax_refresh_title">⟳ refresh</button>
+    </div>
+  </section>
+
+  <section id="axis-generate-section">
+    <div class="section-header"><h2 data-i18n="ax_generate_t">Generate axis-plan</h2></div>
+    <div class="plan-form">
+      <button id="axis-seed-btn" type="button" data-i18n="ax_seed_btn">Seed task from source plan's root task</button>
+      <div class="plan-form-row">
+        <input type="text" id="axis-description-input" class="grow-input" data-i18n-ph="ax_desc_ph">
+        <button id="axis-compose-btn" type="button" data-i18n="ax_compose_btn" data-i18n-title="ax_compose_title">🪄 Compose via LLM</button>
+      </div>
+      <label><span data-i18n="flow">Flow</span>
+        <span class="flow-select-row">
+          <select id="axis-flow-select">
+            <option value="tree_md" data-i18n="flow_tree_md">deepagent_tree_md — structured backlog, full-paragraph detail per item</option>
+            <option value="tree" data-i18n="flow_tree">deepagent_tree — structured backlog, terse/compact items</option>
+            <option value="md" data-i18n="flow_md">deepagent_md — prose document, sections free to revisit themes</option>
+          </select>
+          <button type="button" id="axis-flow-help-btn" class="help-btn" data-i18n="help_btn" data-i18n-title="flow_help_title">❓ Help</button>
+        </span>
+      </label>
+      <p class="hint" data-i18n-html="ax_flow_hint">An axis-plan is scaffolding you'll walk mechanically (labels only, no prose) — <code>deepagent_tree</code>/<code>deepagent_tree_md</code> are almost always the right pick here, not <code>deepagent_md</code>; see the Flow hint on the Init tab for the full genre distinction.</p>
+      <label class="plan-task-label"><span data-i18n="task">Task</span>
+        <textarea id="axis-task-input" rows="4" data-i18n-ph="ax_task_ph"></textarea>
+      </label>
+      <label><span data-i18n="max_depth">Max depth</span> <input type="number" id="axis-maxdepth-input" value="3" min="1" max="8"></label>
+      <label><span data-i18n="extra_flags">Extra flags</span> <input type="text" id="axis-extra-input" placeholder="--web 3"></label>
+      <button id="axis-generate-btn" data-i18n="ax_generate_btn">Generate axis-plan</button>
+    </div>
+  </section>
+
+  <section id="axis-log-section" class="hidden">
+    <div class="section-header"><h2><span data-i18n="log">Log</span> <span id="axis-log-status" class="log-status"></span></h2><button type="button" id="axis-stop-btn" class="stop-btn" disabled data-i18n="stop" data-i18n-title="stop_title">🛑 Stop</button></div>
+    <pre id="axis-log" class="plan-log"></pre>
+  </section>
+</main>
+
+<main id="spec-view" class="view-panel hidden">
+  <section id="spec-generate-section">
+    <div class="section-header">
+      <h2 data-i18n="sp_generate_t">Generate specs</h2>
+      <button type="button" id="spec-flow-help-btn" class="help-btn" data-i18n="help_btn" data-i18n-title="sp_help_title">❓ Help</button>
+    </div>
+    <p class="hint" data-i18n-html="sp_hint">Runs <code>deepagent_spec</code> over the plan currently selected in the top bar — point that at an axis-plan once you have one, or at a research plan directly for the plain 1:1 behavior.</p>
+    <div class="plan-form">
+      <label><span data-i18n="sp_focus">Focus note</span> <input type="text" id="spec-focus-input" data-i18n-ph="sp_focus_ph"></label>
+      <div class="plan-form-row">
+        <label><span data-i18n="sp_ctx">Ctx (recent messages)</span> <input type="number" id="spec-ctx-input" value="0" min="0"></label>
+        <label><span data-i18n="sp_profile">Profile</span> <input type="text" id="spec-profile-input" placeholder="phones"></label>
+        <label><input type="checkbox" id="spec-predictable-checkbox"> <span data-i18n="sp_predictable">Predictable (temperature=0.3/num_predict=2000 if unset)</span></label>
+      </div>
+      <label><span data-i18n="extra_flags">Extra flags</span> <input type="text" id="spec-extra-input"></label>
+      <button id="spec-generate-btn" data-i18n="sp_generate_btn">Generate specs</button>
+    </div>
+  </section>
+
+  <section id="spec-task-section">
+    <div class="section-header"><h2 data-i18n="sp_rollup_t">Roll up into tasks.md</h2></div>
+    <p class="hint" data-i18n-html="sp_rollup_hint">Runs <code>deepagent_task</code> over the plan currently selected in the top bar — compiles container titles and any generated <code>spec_*.md</code> units into the flat <code>tasks.md</code> the Tasks board reads. No LLM call: existing task tags (#backend, +active, %user, etc.) are preserved on re-run, only titles refresh and brand-new leaves get <code>+backlog</code>.</p>
+    <button id="spec-task-btn" type="button" data-i18n="sp_task_btn">📋 Generate tasks.md</button>
+  </section>
+
+  <section id="spec-log-section" class="hidden">
+    <div class="section-header"><h2><span data-i18n="log">Log</span> <span id="spec-log-status" class="log-status"></span></h2><button type="button" id="spec-stop-btn" class="stop-btn" disabled data-i18n="stop" data-i18n-title="stop_title">🛑 Stop</button></div>
+    <pre id="spec-log" class="plan-log"></pre>
+  </section>
+
+  <section id="spec-list-section">
+    <div class="section-header"><h2 data-i18n="sp_list_t">Specs for this plan</h2></div>
+    <div id="spec-list-container" class="plan-tree"></div>
+  </section>
+</main>
+
+<main id="settings-view" class="view-panel hidden">
+  <section>
+    <div class="section-header"><h2 data-i18n="st_runtime">1bcoder runtime</h2></div>
+    <p class="hint" data-i18n-html="st_runtime_hint">Edits <code>.1bcoder/config.yml</code> (this project) or <code>~/.1bcoder/config.yml</code> (every project) directly — the same file every Plan/redo launch reads its model and context from. Other keys already in that file (<code>vars</code>/<code>procs</code>/<code>hooks</code>/<code>active_project</code>) are left untouched and are not shown here.</p>
+    <label><span data-i18n="st_scope">Scope</span>
+      <select id="settings-scope-select">
+        <option value="project" data-i18n="st_scope_project">This project (.1bcoder/config.yml)</option>
+        <option value="global" data-i18n="st_scope_global">Global (~/.1bcoder/config.yml)</option>
+      </select>
+    </label>
+    <label><span data-i18n="st_host">Host</span> <input type="text" id="settings-host-input" placeholder="http://localhost:11434 or openai://localhost:1234"></label>
+    <label><span data-i18n="st_model">Model</span> <input type="text" id="settings-model-input" placeholder="qwen2.5-coder:7b"></label>
+    <label><span data-i18n="st_ctx">Context (num_ctx)</span> <input type="number" id="settings-ctx-input"></label>
+    <label><span data-i18n="st_timeout">Timeout, s</span> <input type="number" id="settings-timeout-input"></label>
+    <label><span data-i18n="st_run_timeout">Run timeout, s</span> <span class="hint" data-i18n="st_run_timeout_hint">(cap for /run commands, 0 = no timeout)</span> <input type="number" id="settings-run-timeout-input"></label>
+    <label><span data-i18n="st_params">Other params</span> <span class="hint" data-i18n="st_params_hint">(key=value, comma-separated — e.g. think=false, temperature=0.2; sent with every request, as /param)</span> <input type="text" id="settings-params-input" placeholder="think=false, temperature=0.2"></label>
+    <button id="settings-save-btn" data-i18n="save">Save</button>
+    <span id="settings-save-status" class="dirty-indicator"></span>
+  </section>
+  <section>
+    <div class="section-header"><h2 data-i18n="st_prefs">Alkonost preferences</h2></div>
+    <p class="hint" data-i18n="st_prefs_hint">Theme and language live in the top bar selectors.</p>
+  </section>
+</main>
+
+<main id="glossary-view" class="view-panel hidden">
+  <section id="glossary-build-section">
+    <div class="section-header">
+      <h2 data-i18n="gl_build_t">Build a glossary</h2>
+      <button type="button" id="glossary-flow-help-btn" class="help-btn" data-i18n="help_btn" data-i18n-title="gl_help_title">❓ Help</button>
+    </div>
+    <p class="hint" data-i18n-html="gl_build_hint">Runs 1bcoder's <code>/flow glossary index</code> with the model from Settings. It is incremental: running it again skips the files already read in full, re-reads the changed ones and finishes a stopped run — so the same button builds, updates and resumes.</p>
+    <div class="plan-form">
+      <div class="plan-form-row">
+        <label><span data-i18n="gl_name">Glossary</span>
+          <input type="text" id="glossary-name-input" list="glossary-name-list" placeholder="docs">
+          <datalist id="glossary-name-list"></datalist>
+        </label>
+        <label class="grow-label"><span data-i18n="gl_source">Source (file or folder of the project)</span>
+          <input type="text" id="glossary-source-input" class="grow-input" placeholder="docs/">
+        </label>
+      </div>
+      <div class="plan-form-row">
+        <label data-i18n-title="gl_terms_only_title"><input type="checkbox" id="glossary-terms-only-checkbox"> <span data-i18n="gl_terms_only">Terms only (one LLM call per chunk)</span></label>
+        <label data-i18n-title="gl_crosslink_title"><input type="checkbox" id="glossary-crosslink-checkbox"> <span data-i18n="gl_crosslink">Cross-link</span></label>
+        <label data-i18n-title="gl_all_title"><input type="checkbox" id="glossary-all-checkbox"> <span data-i18n="gl_all">Re-read all files</span></label>
+        <label data-i18n-title="gl_prune_title"><input type="checkbox" id="glossary-prune-checkbox"> <span data-i18n="gl_prune">Prune deleted files</span></label>
+      </div>
+      <div class="plan-form-row">
+        <label data-i18n-title="gl_jev_title"><input type="checkbox" id="glossary-jev-checkbox"> <span data-i18n="gl_jev">Check with jev (KIND, facts)</span></label>
+        <label><span data-i18n="gl_jev_model">jev model</span> <input type="text" id="glossary-jev-model-input" placeholder="tev1:4b"></label>
+        <label><span data-i18n="gl_jev_host">jev host</span> <input type="text" id="glossary-jev-host-input" placeholder="localhost:11434"></label>
+      </div>
+      <label><span data-i18n="extra_flags">Extra flags</span> <input type="text" id="glossary-extra-input" placeholder="--chunk 800"></label>
+      <button id="glossary-build-btn" data-i18n="gl_build_btn">📖 Build / continue</button>
+    </div>
+  </section>
+
+  <section id="glossary-log-section" class="hidden">
+    <div class="section-header"><h2><span data-i18n="log">Log</span> <span id="glossary-log-status" class="log-status"></span></h2><button type="button" id="glossary-stop-btn" class="stop-btn" disabled data-i18n="stop" data-i18n-title="stop_title">🛑 Stop</button></div>
+    <pre id="glossary-log" class="plan-log"></pre>
+  </section>
+
+  <section id="glossary-browse-section">
+    <div class="section-header">
+      <h2 data-i18n="gl_browse_t">Articles</h2>
+      <select id="glossary-select"></select>
+      <button type="button" id="glossary-reload-btn" data-i18n="refresh">Refresh</button>
+      <span id="glossary-summary" class="hint"></span>
+    </div>
+    <div class="plan-form-row glossary-filters">
+      <input type="text" id="glossary-filter-input" data-i18n-ph="gl_filter_ph">
+      <label><span data-i18n="gl_kind">Kind</span>
+        <select id="glossary-kind-select">
+          <option value="" data-i18n="gl_kind_any">any</option>
+          <option value="domain">domain</option>
+          <option value="technology">technology</option>
+          <option value="noise">noise</option>
+          <option value="unjudged" data-i18n="gl_kind_unjudged">not judged</option>
+        </select>
+      </label>
+      <label data-i18n-title="gl_min_seen_title"><span data-i18n="gl_min_seen">Seen ≥</span> <input type="number" id="glossary-min-seen-input" value="0" min="0"></label>
+      <label><input type="checkbox" id="glossary-multiword-checkbox"> <span data-i18n="gl_multiword">Multi-word only</span></label>
+      <label><span data-i18n="gl_sort">Sort</span>
+        <select id="glossary-sort-select">
+          <option value="seen" data-i18n="gl_sort_seen">by support (SEEN)</option>
+          <option value="name" data-i18n="gl_sort_name">by name</option>
+          <option value="facts" data-i18n="gl_sort_facts">by facts</option>
+        </select>
+      </label>
+    </div>
+    <div class="table-scroll glossary-table-wrap">
+      <table class="glossary-table">
+        <thead><tr>
+          <th data-i18n="gl_col_term">Term</th><th data-i18n="gl_kind">Kind</th>
+          <th data-i18n="gl_col_seen" data-i18n-title="gl_min_seen_title">Seen</th>
+          <th data-i18n="gl_col_defs">Definitions</th><th data-i18n="gl_col_facts">Facts</th><th data-i18n="gl_col_links">Links</th>
+        </tr></thead>
+        <tbody id="glossary-tbody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="glossary-tools-section">
+    <div class="section-header"><h2 data-i18n="gl_tools_t">1bcoder commands</h2></div>
+    <p class="hint" data-i18n-html="gl_tools_hint">Run on the glossary chosen above; the output goes to the log. <b>HTML</b> and <b>Contents</b> are exports for reading the glossary without alkonost or for committing it to git: <code>glossary.html</code> + one page per term, and <code>_contents.md</code> with every term as a link for a markdown viewer.</p>
+    <div class="plan-form-row">
+      <button type="button" id="glossary-relink-btn" data-i18n="gl_relink_btn" data-i18n-title="gl_relink_title">🔗 Relink</button>
+      <label data-i18n-title="gl_synonyms_title"><input type="checkbox" id="glossary-synonyms-checkbox"> <span data-i18n="gl_synonyms">with synonyms</span></label>
+      <button type="button" id="glossary-html-btn" data-i18n="gl_html_btn" data-i18n-title="gl_html_title">🌐 Export HTML</button>
+      <button type="button" id="glossary-contents-btn" data-i18n="gl_contents_btn" data-i18n-title="gl_contents_title">📑 Export contents (.md)</button>
+    </div>
+    <div class="plan-form-row">
+      <select id="glossary-cmd-select">
+        <option value="find" data-i18n="gl_cmd_find">find — text in definitions and facts</option>
+        <option value="extract" data-i18n="gl_cmd_extract">extract — terms in a free text</option>
+        <option value="show" data-i18n="gl_cmd_show">show — one article</option>
+        <option value="filter" data-i18n="gl_cmd_filter">filter — \term -term !term tokens</option>
+      </select>
+      <input type="text" id="glossary-cmd-input" class="grow-input" data-i18n-ph="gl_cmd_ph">
+      <button type="button" id="glossary-cmd-btn" data-i18n="gl_cmd_btn">▶ Run</button>
+    </div>
+  </section>
+
+  <section id="glossary-search-section">
+    <div class="section-header">
+      <h2 data-i18n="gl_search_t">Search (simargl)</h2>
+      <span id="glossary-index-status" class="hint"></span>
+      <button type="button" id="glossary-rag-btn" data-i18n="gl_rag_btn" data-i18n-title="gl_rag_title">🧭 Build search index</button>
+    </div>
+    <p class="hint" data-i18n-html="gl_search_hint">Semantic search over the articles of the glossary chosen above: meaning, not spelling — a question finds the terms whose definitions and facts answer it. The index lives in the glossary folder (<code>.simargl/</code>); rebuild it after the glossary grows.</p>
+    <div class="plan-form-row">
+      <input type="text" id="glossary-query-input" class="grow-input" data-i18n-ph="gl_query_ph">
+      <button id="glossary-search-btn" data-i18n="gl_search_btn">🔍 Search</button>
+    </div>
+    <div id="glossary-results" class="glossary-results"></div>
+  </section>
+</main>
+
+<main id="files-view" class="view-panel hidden">
+  <div class="section-header">
+    <h2 data-i18n="tab_files">Files</h2>
+    <div class="ph-actions">
+      <button type="button" id="files-refresh-btn" data-i18n="refresh">Refresh</button>
+      <button type="button" id="files-mkdir-toggle-btn" data-i18n="new_folder">New folder</button>
+      <label class="files-upload-label">
+        <span data-i18n="upload">Upload</span>
+        <input type="file" id="files-upload-input" multiple style="display:none">
+      </label>
+    </div>
+  </div>
+  <p class="hint" data-i18n="files_hint">Browses the currently selected project's own root directory — pick a project in the top bar first.</p>
+  <div class="inline-dialog hidden" id="files-mkdir-dialog">
+    <input type="text" id="files-mkdir-input" data-i18n-ph="mkdir_ph" placeholder="folder/name">
+    <button type="button" id="files-mkdir-create-btn" data-i18n="create">Create</button>
+    <button type="button" id="files-mkdir-cancel-btn" data-i18n="cancel">Cancel</button>
+  </div>
+  <div class="files-layout">
+    <div class="files-tree" id="files-tree">
+      <div class="placeholder-text" data-i18n="select_project">Select a project first</div>
+    </div>
+    <div class="files-preview" id="files-preview">
+      <div class="placeholder-text" data-i18n="select_file">Select a file or folder</div>
+    </div>
+  </div>
 </main>
 
 <aside id="side-panel" class="side-panel hidden">
+  <div id="side-panel-resizer" class="side-panel-resizer" data-i18n-title="resize_title"></div>
   <div class="side-panel-header">
     <span id="side-panel-breadcrumb"></span>
-    <button id="side-panel-edit-btn" class="icon-btn hidden" title="Edit raw markdown">&#9998;</button>
+    <button id="side-panel-edit-btn" class="icon-btn hidden" data-i18n-title="edit_raw_title">&#9998;</button>
     <button id="side-panel-close">&times;</button>
   </div>
   <div id="side-panel-content" class="md-content"></div>
   <div id="side-panel-editor" class="side-panel-editor hidden">
     <textarea id="side-panel-textarea" spellcheck="false"></textarea>
     <div class="side-panel-editor-actions">
-      <button id="side-panel-save-btn">Save</button>
-      <button id="side-panel-cancel-btn">Cancel</button>
+      <button id="side-panel-save-btn" data-i18n="save">Save</button>
+      <button id="side-panel-cancel-btn" data-i18n="cancel">Cancel</button>
       <span id="side-panel-edit-status" class="dirty-indicator"></span>
     </div>
-    <div class="side-panel-preview-label">Preview</div>
+    <div class="side-panel-preview-label" data-i18n="preview">Preview</div>
     <div id="side-panel-preview" class="md-content"></div>
   </div>
 </aside>
 
+<div id="project-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h3 data-i18n="np_heading">Make a folder a project</h3>
+    <p class="hint" data-i18n-html="np_hint">A project is any folder with a <code>.1bcoder/</code> inside. Pick a folder: alkonost creates an empty <code>.1bcoder/</code> there and nothing else.</p>
+    <div class="np-path"><code id="project-modal-path"></code></div>
+    <ul id="project-modal-folders" class="np-folders"></ul>
+    <p id="project-modal-error" class="modal-error hidden"></p>
+    <div class="modal-actions">
+      <button id="project-modal-ok" data-i18n="np_ok">Make this folder a project</button>
+      <button id="project-modal-cancel" data-i18n="cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <div id="task-modal" class="modal-overlay hidden">
   <div class="modal-box">
-    <h3 id="task-modal-heading">Add Task</h3>
+    <h3 id="task-modal-heading" data-i18n="add_task">Add Task</h3>
 
     <label class="modal-field">
       <span>ID</span>
@@ -102,8 +559,8 @@
     </label>
 
     <label class="modal-field">
-      <span>Task</span>
-      <input type="text" id="task-modal-text" placeholder="Task description">
+      <span data-i18n="modal_task">Task</span>
+      <input type="text" id="task-modal-text" data-i18n-ph="modal_task_ph">
     </label>
 
     <div class="modal-tag-row">
@@ -136,15 +593,35 @@
     <p id="task-modal-error" class="modal-error hidden"></p>
 
     <div class="modal-actions">
-      <button id="task-modal-ok">OK</button>
-      <button id="task-modal-cancel">Cancel</button>
+      <button id="task-modal-ok" data-i18n="ok">OK</button>
+      <button id="task-modal-cancel" data-i18n="cancel">Cancel</button>
     </div>
   </div>
 </div>
 
+<div id="redo-confirm-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <h3 data-i18n="redo_before">Before you redo this</h3>
+    <p class="hint" id="redo-confirm-detail"></p>
+    <p class="hint" data-i18n="redo_note">The system only regenerates from what's currently saved on disk — if the change you want isn't in that section yet, redoing now will just reproduce the old content. Save your edit there first, then redo.</p>
+    <div class="modal-actions">
+      <button id="redo-confirm-yes" data-i18n="redo_yes">Yes, regenerate</button>
+      <button id="redo-confirm-cancel" data-i18n="cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+  </div><!-- /.app-main -->
+</div><!-- /.app -->
+
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.21/dist/katex.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 <script>mermaid.initialize({ startOnLoad: false, theme: 'default' });</script>
+<script src="lang/uk.js"></script>
+<script src="lang/de.js"></script>
+<script src="lang/fr.js"></script>
+<script src="lang/es.js"></script>
+<script src="lang/pt.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

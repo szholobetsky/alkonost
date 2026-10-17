@@ -5,6 +5,7 @@
   --text:       #042F2E;
   --text-muted: #0F766E;
   --border:     #99F6E4;
-  --accent:     #0D9488;
+  --accent:     #0E7490;
+  --on-accent:  #ffffff;
   --urgent:     #e11d48;
 }

@@ -46,3 +46,34 @@ def test_read_item_returns_raw_text():
 
 def test_read_item_missing_returns_empty():
     assert planmd.read_item(PLAN_DIR, "9.9") == ""
+
+
+def test_full_text_concatenates_every_item_in_tree_order(tmp_path):
+    plan_dir = str(tmp_path / "plan1")
+    os.makedirs(plan_dir)
+    with open(os.path.join(plan_dir, "index.md"), "w", encoding="utf-8") as f:
+        f.write("# Root task mentions Kotlin\n")
+    planmd.write_item_raw(plan_dir, "1", "# Item 1\ncontent one")
+    planmd.write_item_raw(plan_dir, "1.2", "# Item 1.2\nPostgres mentioned here")
+    planmd.write_item_raw(plan_dir, "1.1", "# Item 1.1\nsomething else")
+
+    text = planmd.full_text(plan_dir)
+
+    assert "Root task mentions Kotlin" in text
+    assert "content one" in text
+    assert "Postgres mentioned here" in text
+    # tree order (1, 1.1, 1.2), not insertion order (1, 1.2, 1.1)
+    assert text.index("Item 1.1") < text.index("Item 1.2")
+
+
+def test_full_text_without_index_md_still_reads_items(tmp_path):
+    plan_dir = str(tmp_path / "plan1")
+    os.makedirs(plan_dir)
+    planmd.write_item_raw(plan_dir, "1", "# Only item\nKotlin and Postgres")
+    assert "Kotlin and Postgres" in planmd.full_text(plan_dir)
+
+
+def test_full_text_empty_plan_dir_is_empty_string(tmp_path):
+    plan_dir = str(tmp_path / "empty")
+    os.makedirs(plan_dir)
+    assert planmd.full_text(plan_dir) == ""

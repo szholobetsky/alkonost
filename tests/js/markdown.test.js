@@ -31,3 +31,9 @@ test("md() handles a multi-dot leaf id in the SOURCE line", () => {
   const html = app.md("SOURCE: [src: item_1.1.1.2.md#3]");
   assert.match(html, /onclick="openItemPanel\('1\.1\.1\.2'\)"/);
 });
+
+test("md() adds a jump-to-Plan-tab button next to the SOURCE link", () => {
+  const app = loadApp();
+  const html = app.md("SOURCE: [src: item_1.1.1.md#1]");
+  assert.match(html, /class="source-jump-btn" onclick="focusPlanNode\('1\.1\.1'\)"/);
+});

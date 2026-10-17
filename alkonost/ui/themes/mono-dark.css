@@ -6,5 +6,6 @@
   --text-muted: #888888;
   --border:     #333333;
   --accent:     #cccccc;
+  --on-accent:  #0a0a0a;
   --urgent:     #e5484d;
 }

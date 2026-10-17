@@ -3,8 +3,9 @@
   --bg:         #faf7f2;
   --panel:      #f0ebe3;
   --text:       #2d2416;
-  --text-muted: #8b7355;
+  --text-muted: #7a6247;
   --border:     #ddd5c8;
   --accent:     #7c3aed;
+  --on-accent:  #ffffff;
   --urgent:     #dc2626;
 }

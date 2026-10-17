@@ -31,3 +31,6 @@ Thumbs.db
 
 # build artifacts
 old/
+
+# 1bcoder working folder of this repo (map, keywords)
+/.1bcoder/

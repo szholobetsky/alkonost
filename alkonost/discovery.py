@@ -20,6 +20,9 @@ import os
 IGNORE_DIRS = {
     ".git", "node_modules", "venv", ".venv", "__pycache__",
     "dist", "build", ".idea", ".vscode",
+    # no projects live here, only temporary copies left by tests and tools (tmpXXXX/.1bcoder,
+    # pytest-of-<user>/...) — started from the home folder they flooded the project list
+    "AppData", "Temp", "tmp",
 }
 
 _DOT1BCODER = ".1bcoder"
@@ -47,6 +50,11 @@ def _walk(dir_path: str, depth: int, max_depth: int, found: list) -> None:
 
     for entry in entries:
         if not entry.is_dir(follow_symlinks=False):
+            continue
+        # a Windows junction is a second road to a folder found elsewhere (C:\Users\<u>\Local Settings
+        # -> AppData\Local): following it lists the same projects twice. is_dir(follow_symlinks=False)
+        # stops symlinks but not junctions; DirEntry.is_junction() exists from Python 3.12
+        if getattr(entry, "is_junction", lambda: False)():
             continue
         if entry.name == _DOT1BCODER:
             found.append(dir_path)
@@ -80,6 +88,58 @@ def discover_projects(root: str, max_depth: int = 6) -> dict:
             "plan_count": _count_plans(proj_root),
         }
     return result
+
+
+# ── making a folder a project ───────────────────────────────────────────
+# A project is nothing but a folder holding .1bcoder/, so "creating" one means creating
+# that folder. Only a folder discovery would find again counts: inside the scan root,
+# not deeper than max_depth, not under a folder the walk skips (.git, node_modules, …).
+
+class ProjectPathError(ValueError):
+    pass
+
+
+def _parts(rel: str) -> list:
+    return [p for p in (rel or "").replace("\\", "/").split("/") if p not in ("", ".")]
+
+
+def scan_folder(root: str, rel: str, max_depth: int = 6) -> str:
+    """Absolute path of root/rel, checked: an existing folder the walk reaches."""
+    parts = _parts(rel)
+    if any(p == ".." or not _should_descend(p) for p in parts):
+        raise ProjectPathError(f"not a folder alkonost scans: {rel}")
+    if len(parts) > max_depth:
+        raise ProjectPathError(f"deeper than --max-depth {max_depth}: {rel}")
+    path = os.path.join(os.path.abspath(root), *parts)
+    if not os.path.isdir(path):
+        raise ProjectPathError(f"no such folder: {rel}")
+    return path
+
+
+def list_folders(root: str, rel: str, max_depth: int = 6) -> dict:
+    """{"path", "is_project", "can_descend", "folders": [{"name", "is_project"}]} — one level."""
+    path = scan_folder(root, rel, max_depth)
+    parts = _parts(rel)
+    folders = []
+    try:
+        entries = sorted(os.scandir(path), key=lambda e: e.name.lower())
+    except OSError:
+        entries = []
+    for e in entries:
+        if e.is_dir(follow_symlinks=False) and _should_descend(e.name) and e.name != _DOT1BCODER:
+            folders.append({"name": e.name,
+                            "is_project": os.path.isdir(os.path.join(e.path, _DOT1BCODER))})
+    return {"path": "/".join(parts),
+            "is_project": os.path.isdir(os.path.join(path, _DOT1BCODER)),
+            "can_descend": len(parts) < max_depth,
+            "folders": folders}
+
+
+def make_project(root: str, rel: str, max_depth: int = 6) -> str:
+    """Create <root>/<rel>/.1bcoder/ (nothing inside); return the project id. Idempotent."""
+    path = scan_folder(root, rel, max_depth)
+    os.makedirs(os.path.join(path, _DOT1BCODER), exist_ok=True)
+    return project_id(path)
 
 
 def list_plans(project_root: str) -> list:
